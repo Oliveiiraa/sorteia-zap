@@ -23,6 +23,7 @@ Route::prefix('draw')->group(function () {
     Route::get('/services', 'App\Http\Controllers\DrawController@listServices');
     Route::post('/', 'App\Http\Controllers\DrawController@store');
     Route::post('/disable/{id}', 'App\Http\Controllers\DrawController@disable');
+    Route::post('/sorteio', 'App\Http\Controllers\DrawController@draw');
 });
 
 Route::prefix('award')->group(function () {
@@ -32,3 +33,5 @@ Route::prefix('award')->group(function () {
 });
 
 Route::post('/webhook', 'App\Http\Controllers\BotController@index');
+Route::get('/winners', 'App\Http\Controllers\WinnerController@list');
+Route::get('/draw/winners', 'App\Http\Controllers\WinnerController@listForDraw');

@@ -18,6 +18,7 @@ class CreateAwards extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('image')->nullable();
+            $table->string('finish')->default(0);
             $table->integer('draw_id')->unsigned();
             $table->foreign('draw_id')->references('id')->on('draws');
             $table->timestamps();

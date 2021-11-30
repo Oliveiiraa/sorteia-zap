@@ -15,7 +15,8 @@ class Award extends Model
         'name',
         'description',
         'image',
-        'draw_id'
+        'draw_id',
+        'finish'
     ];
 
     public function draw()

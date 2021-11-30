@@ -16,6 +16,11 @@ class WinnerRepository extends Winner
         return $this->all();
     }
 
+    public function listAllForDraw($id)
+    {
+        return $this->where('draw_id', $id)->get();
+    }
+
     public function findById($id)
     {
         return $this->find($id);

@@ -11,6 +11,11 @@ class DrawRepository extends Draw
         return $this->create($data);
     }
 
+    public function findOpen($id)
+    {
+        return $this->where('id', $id)->where('finish', 0)->first();
+    }
+
     public function listAll()
     {
         return $this->withTrashed()->get();
@@ -29,5 +34,15 @@ class DrawRepository extends Draw
     public function disable($id)
     {
         return $this->where('id', $id)->delete();
+    }
+
+    public function finish($id)
+    {
+        return $this->where('id', $id)->update(['finish' => 1]);
+    }
+
+    public function countAwards($id)
+    {
+        return $this->where('id', $id)->where('finish', true)->count();
     }
 }

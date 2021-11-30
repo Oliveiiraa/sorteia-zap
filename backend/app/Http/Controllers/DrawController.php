@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\AwardRepository;
+use App\Repositories\CustomerRepository;
 use App\Repositories\DrawRepository;
+use App\Repositories\WinnerRepository;
 use App\Services\DigisacRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -10,10 +13,13 @@ use Illuminate\Support\Facades\Validator;
 
 class DrawController extends Controller
 {
-    public function __construct(DrawRepository $drawRepository, DigisacRequest $digisacRequest)
+    public function __construct(DrawRepository $drawRepository, DigisacRequest $digisacRequest, WinnerRepository $winnerRepository, CustomerRepository $customerRepository, AwardRepository $awardRepository)
     {
         $this->drawRepository = $drawRepository;
+        $this->customerRepository = $customerRepository;
         $this->digisacRequest = $digisacRequest;
+        $this->winnerRepository = $winnerRepository;
+        $this->awardRepository = $awardRepository;
     }
 
     public function list()
@@ -103,18 +109,43 @@ class DrawController extends Controller
             ->json(['success' => 'Draw disabled successfully'], 200);
     }
 
-    public function draw($id)
+    public function draw(Request $request)
     {
-        $draw = $this->drawRepository->findById($id);
+        $draw = $this->drawRepository->findOpen($request->draw_id);
 
         if (!$draw) {
             return response()
-                ->json(['error' => 'Draw not found'], 404);
+                ->json(['error' => 'Draw finished'], 404);
         }
 
-        $this->drawRepository->disable($id);
+        $award = $this->awardRepository->findOpen($request->award_id);
+
+        if (!$award) {
+            return response()
+                ->json(['error' => 'Award finished'], 404);
+        }
+
+        $numbers = $this->customerRepository->findByDraw($request->draw_id);
+
+        $sorteado = $numbers[rand(0, count($numbers) - 1)];
+
+        $this->winnerRepository->store([
+            'customer_id' => $sorteado->id,
+            'draw_id' => $request->draw_id,
+            'award_id' => $request->award_id
+        ]);
+
+        $this->customerRepository->winner($sorteado->id);
+
+        $this->awardRepository->finish($request->award_id);
+
+        $countAward = $this->drawRepository->countAwards($request->draw_id);
+
+        if ($countAward == 0) {
+            $this->drawRepository->finish($request->draw_id);
+        }
 
         return response()
-            ->json(['success' => 'Draw disabled successfully'], 200);
+            ->json(['success' => 'Draw successfully'], 200);
     }
 }
