@@ -1,0 +1,49 @@
+.container{
+    color: black;
+    text-align: center;
+    margin: 40px auto;
+    max-width: 1200px;
+}
+
+.container h2{
+    margin-bottom: 20px;
+}
+
+.show{
+    display: block !important;
+  }
+.prizeDraw_container{
+    border: 2px solid black;
+    border-radius: 8px;
+    width: 50%;
+    height: auto;
+    margin: 20px auto;
+    background: white;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.7);
+    box-shadow: 3px 3px rgba(0, 0, 0, 0.5), -1em 0 0.4em  rgba(0, 0, 0, 0.4);
+ 
+
+    
+}
+
+
+.prizeDraw_content{    
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+
+}
+.prizeDraw_content h3{
+    display: block;
+    margin-right: 60%;
+    margin-bottom: 20px;
+}
+
+.prizeDraw_infos_1{
+    margin: 20px;   
+}
+
+.prizeDraw_infos_2{
+    margin-top: 30%;
+    margin-left:10px;
+}
